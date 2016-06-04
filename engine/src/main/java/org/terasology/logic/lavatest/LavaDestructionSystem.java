@@ -39,6 +39,8 @@ import org.terasology.physics.engine.RigidBody;
 import org.terasology.registry.In;
 import org.terasology.world.BlockEntityRegistry;
 import org.terasology.world.WorldProvider;
+import org.terasology.world.block.Block;
+import org.terasology.world.block.BlockComponent;
 
 import java.util.Iterator;
 import java.util.List;
@@ -92,10 +94,19 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
                     HitResult hitResult = physics.rayTrace(location, comp.velocity.normalize(), 0.2f, StandardCollisionGroup.LIQUID);
                     if (hitResult.isHit() == true) {
 
+
+
                         entity.addComponent(new BurnableItemComponent());
                         if (entity.hasComponent(BurnableItemComponent.class)) {
 
-                            entity.send(new onLavaEnterEvent(entity));
+                            if(hitResult.getEntity().hasComponent(BlockComponent.class)) {
+                                BlockComponent liquidBlockComp = hitResult.getEntity().getComponent(BlockComponent.class);
+
+                                Block liquidBlock = liquidBlockComp.getBlock();
+                                if (liquidBlock.isLava()) {
+                                    entity.send(new onLavaEnterEvent(entity));
+                                }
+                            }
 
                         }
                     }
@@ -111,7 +122,7 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
     @ReceiveEvent
     public void droppedInLava(onLavaEnterEvent  event, EntityRef entity) {
 
-            event.getItem().addComponent(new DestroyedItemComponent());
+        event.getItem().addComponent(new DestroyedItemComponent());
 
     }
 
