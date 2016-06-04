@@ -91,11 +91,12 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
                     body.getLocation(location);
                     HitResult hitResult = physics.rayTrace(location, comp.velocity.normalize(), 0.2f, StandardCollisionGroup.LIQUID);
                     if (hitResult.isHit() == true) {
-                        logger.info("is hit");
+
                         entity.addComponent(new BurnableItemComponent());
                         if (entity.hasComponent(BurnableItemComponent.class)) {
-                            logger.info("event is send");
+
                             entity.send(new onLavaEnterEvent(entity));
+
                         }
                     }
                 }
@@ -110,7 +111,6 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
     @ReceiveEvent
     public void droppedInLava(onLavaEnterEvent  event, EntityRef entity) {
 
-            logger.info("EXTERMINATE EXTERMINATE!");
             event.getItem().addComponent(new DestroyedItemComponent());
 
     }
