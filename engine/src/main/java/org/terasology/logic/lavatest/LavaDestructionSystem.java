@@ -26,6 +26,7 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
+import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.DropItemEvent;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.math.geom.Vector3f;
@@ -103,7 +104,7 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
 
 
 
-                        entity.addComponent(new BurnableItemComponent());
+                        //entity.addComponent(new BurnableItemComponent());
                         if (entity.hasComponent(BurnableItemComponent.class)) {
 
                             if(hitResult.getEntity().hasComponent(BlockComponent.class)) {
@@ -111,6 +112,7 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
 
                                 Block liquidBlock = liquidBlockComp.getBlock();
                                 if (liquidBlock.isLava()) {
+
                                     entity.send(new onLavaEnterEvent(entity));
                                 }
                             }
@@ -119,6 +121,11 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
                     }
                 }
         }
+    }
+
+    @ReceiveEvent
+    public void onDropItemEvent(DropItemEvent event, EntityRef itemEntity, ItemComponent itemComponent) {
+        itemEntity.addComponent(new BurnableItemComponent());
     }
 
     /**
