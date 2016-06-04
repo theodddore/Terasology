@@ -41,9 +41,8 @@ import org.terasology.world.BlockEntityRegistry;
 import org.terasology.world.WorldProvider;
 
 import java.util.Iterator;
-import java.util.List;
 
-
+/**@Authors Thodoris Mavrikis, Alex Stellas **/
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class LavaDestructionSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
     private static final Logger logger = LoggerFactory.getLogger(LavaDestructionSystem.class);
@@ -63,6 +62,14 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
     @In
     private PhysicsEngine physics;
 
+
+    /**
+     * Update is the implementation of the UpdateSubscriber Interface. It contains the
+     * core code of the module. It implements two core functions, firstly it sends events
+     * when objects hit lava and secondly it destroys items that have DestroyedItemComponent
+     * component.
+     * @param delta The time (in seconds) since the last engine update.
+     */
     @Override
     public void update(float delta){
 
@@ -105,7 +112,7 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
 
     /**
      * droppedInLava is the method invoked when an item fall into a lavaBlock.
-     * @param event .
+     * @param event onLavaEnterEvent that are send when an object hits lava.
      * @param entity the lava entity in which the item falls into.
      */
     @ReceiveEvent
