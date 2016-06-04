@@ -29,7 +29,8 @@ public class onLavaEnterEvent implements Event {
 
   /**
    * Constructor of the event, initializes
-   * the lava block.
+   * the item that hit the lava block.
+   * @param item, the item which entered lava
    */
   public onLavaEnterEvent(EntityRef item){
 
@@ -37,10 +38,18 @@ public class onLavaEnterEvent implements Event {
 
   }
 
+    /**
+     * Setter method for the item which entered lava.
+     * @param item, the item which entered in lava.
+     */
   public void setItem(EntityRef item) {
     this.item = item;
   }
 
+    /**
+     * Getter method for the item which entered lava.
+     * @return the item which entered in the lava.
+     */
   public EntityRef getItem() {
     return item;
   }
