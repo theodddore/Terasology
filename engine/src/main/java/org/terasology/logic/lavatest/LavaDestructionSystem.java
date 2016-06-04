@@ -18,7 +18,6 @@ package org.terasology.logic.lavatest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.Time;
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -26,15 +25,12 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
-import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.DropItemEvent;
-import org.terasology.logic.location.LocationComponent;
 import org.terasology.math.geom.Vector3f;
 import org.terasology.monitoring.PerformanceMonitor;
 import org.terasology.physics.HitResult;
 import org.terasology.physics.StandardCollisionGroup;
 import org.terasology.physics.components.RigidBodyComponent;
-import org.terasology.physics.components.TriggerComponent;
 import org.terasology.physics.engine.PhysicsEngine;
 import org.terasology.physics.engine.RigidBody;
 import org.terasology.registry.In;
@@ -77,9 +73,7 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
     public void update(float delta){
 
         for (EntityRef e : entityManager.getEntitiesWith(DestroyedItemComponent.class)) {
-
             e.destroy();
-
         }
 
         PerformanceMonitor.startActivity("Physics Renderer");
@@ -102,29 +96,33 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
                     HitResult hitResult = physics.rayTrace(location, comp.velocity.normalize(), 0.2f, StandardCollisionGroup.LIQUID);
                     if (hitResult.isHit() == true) {
 
-
-
-                        //entity.addComponent(new BurnableItemComponent());
                         if (entity.hasComponent(BurnableItemComponent.class)) {
 
-                            if(hitResult.getEntity().hasComponent(BlockComponent.class)) {
-                                BlockComponent liquidBlockComp = hitResult.getEntity().getComponent(BlockComponent.class);
+                            if (hitResult.getEntity().hasComponent(BlockComponent.class)) {
 
+                                BlockComponent liquidBlockComp = hitResult.getEntity().getComponent(BlockComponent.class);
                                 Block liquidBlock = liquidBlockComp.getBlock();
+
                                 if (liquidBlock.isLava()) {
 
                                     entity.send(new onLavaEnterEvent(entity));
                                 }
                             }
-
                         }
                     }
                 }
         }
     }
 
+    /**
+     * onDropItemEvent is the method invoked when a character drops an item.
+     * It adds the BurnableItemComponent to the dropped item,
+     * in order to know that they can be burned(destroyed)
+     * @param event DropItemEvent that are send when an item is dropped.
+     * @param itemEntity the entity of the item that is dropped.
+     */
     @ReceiveEvent
-    public void onDropItemEvent(DropItemEvent event, EntityRef itemEntity, ItemComponent itemComponent) {
+    public void onDropItemEvent(DropItemEvent event, EntityRef itemEntity) {
         itemEntity.addComponent(new BurnableItemComponent());
     }
 
@@ -135,9 +133,7 @@ public class LavaDestructionSystem extends BaseComponentSystem implements Update
      */
     @ReceiveEvent
     public void droppedInLava(onLavaEnterEvent  event, EntityRef entity) {
-
         event.getItem().addComponent(new DestroyedItemComponent());
-
     }
 
 
