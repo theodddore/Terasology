@@ -20,6 +20,7 @@ import org.terasology.entitySystem.event.Event;
 
 
 /**
+ * @authors Thodoris Mavrikis, Alex Stellas
  * This class represents the event of
  * an item entering into a lava block
  */

@@ -18,7 +18,8 @@ package org.terasology.logic.lavatest;
 import org.terasology.entitySystem.Component;
 
 /**
- * Created by Theodore Mavrikis on 3/6/2016.
+ * @authors Thodoris Mavrikis, Alex Stellas
+ * Created on 3/6/2016.
  */
 public class DestroyedItemComponent implements Component {
 }
